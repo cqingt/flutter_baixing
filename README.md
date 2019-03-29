@@ -18,3 +18,4 @@ samples, guidance on mobile development, and a full API reference.
 - json数据转model：https://javiercbk.github.io/json_to_dart/
 - material icon 地址：http://fluttericon.com/
 - flutter packages: https://pub.dartlang.org/flutter/packages
+- flutter 中文文档：https://book.flutterchina.club/
