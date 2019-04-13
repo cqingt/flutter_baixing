@@ -9,11 +9,13 @@ import 'package:fluro/fluro.dart';
 import './routes/application.dart';
 import './routes/route.dart';
 import './provide/goods_detail.dart';
+import './provide/cart.dart';
 
 void main() {
   var count = Counter();
   var providers = Providers();
   var childCategory =ChildCategory();
+  var cartProvide = CartProvide();
   var categoryGoodsList = CategoryGoodsListProvide();
   var goodsDetailProvide = GoodsDetailProvide();
 
@@ -21,6 +23,7 @@ void main() {
     ..provide(Provider<Counter>.value(count))// 添加状态监听
     ..provide(Provider<CategoryGoodsListProvide>.value(categoryGoodsList))// 添加状态监听
     ..provide(Provider<GoodsDetailProvide>.value(goodsDetailProvide))// 添加状态监听
+    ..provide(Provider<CartProvide>.value(cartProvide))// 购物车
     ..provide(Provider<ChildCategory>.value(childCategory)); // 添加状态监听
 
   // ..provide() 添加多个状态管理

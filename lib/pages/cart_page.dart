@@ -1,48 +1,76 @@
 import 'package:flutter/material.dart';
-import 'package:provide/provide.dart';
-import '../provide/counter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class CartPage extends StatelessWidget {
+class CartPage extends StatefulWidget {
+  @override
+  _CartPageState createState() => _CartPageState();
+}
+
+class _CartPageState extends State<CartPage> {
+  List<String> tempList = []; 
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            MyNumber(),
-            MyButton()
-          ],
-        ),
+    _show();
+    return Container(
+      child: Column(
+        children: <Widget>[
+          Container(
+            height: 500,
+            child: ListView.builder(
+              itemCount: tempList.length,
+              itemBuilder: (context, index){
+                return ListTile(
+                  title: Text(tempList[index]),
+                );
+              },
+            ),
+          ),
+
+          RaisedButton(
+            onPressed: (){_add();},
+            child: Text('添加'),
+          ),
+
+          RaisedButton(
+            onPressed: (){_clear();},
+            child: Text('清空'),
+          )
+        ],
       ),
     );
   }
-}
 
-class MyNumber extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin:EdgeInsets.only(top: 200.0),
-      child: Provide<Counter>(
-        builder: (context, child, counter){
-          return Text(
-            '${counter.value}',
-            style: Theme.of(context).textTheme.display1,
-          );
-        },
-      )
-    );
-  }
-}
+  void _show() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var content = prefs.getStringList('tempList');
 
-class MyButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return RaisedButton(
-      onPressed: (){
-        Provide.value<Counter>(context).increment();
-      },
-      child: Text('自增'),
-    );
+    if (content != null) {
+      setState(() {
+       tempList = content; 
+      });
+    }
   }
+
+  void _add() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String temp = '好好学习，天天向上';
+    tempList.add(temp);
+    prefs.setStringList('tempList', tempList);
+
+    _show();
+  }
+
+  void _clear() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // prefs.clear(); //清空所有
+
+    prefs.remove('tempList');
+
+    setState(() {
+     tempList = []; 
+    });
+  }
+
 }

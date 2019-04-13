@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provide/provide.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../provide/goods_detail.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class DetailsTopArea extends StatelessWidget {
   @override
@@ -17,7 +18,8 @@ class DetailsTopArea extends StatelessWidget {
               children: <Widget>[
                 _goodsImage(goodsDetail.image1),
                 _goodsName(goodsDetail.goodsName),
-                _goodsNum(goodsDetail.goodsSerialNumber)
+                _goodsNum(goodsDetail.goodsSerialNumber),
+                _goodsPrice(goodsDetail.presentPrice, goodsDetail.oriPrice)
               ],
             ),
           );
@@ -29,10 +31,15 @@ class DetailsTopArea extends StatelessWidget {
   }
 
   Widget _goodsImage(url){
-    return Image.network(
-      url,
+    return FadeInImage.memoryNetwork(
+      placeholder: kTransparentImage,
+      image: url,
       width: ScreenUtil().setWidth(740),
     );
+    // return Image.network(
+    //   url,
+    //   width: ScreenUtil().setWidth(740),
+    // );
   }
 
   Widget _goodsName(name) {
@@ -55,6 +62,34 @@ class DetailsTopArea extends StatelessWidget {
       padding: EdgeInsets.only(left: 15),
       margin: EdgeInsets.only(top:8),
       child: Text("编号：$num", style: TextStyle(color: Colors.black12),),
+    );
+  }
+
+  Widget _goodsPrice(price, originPrice) {
+    return Container(
+      child: Row(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.only(left: 15,right: 15),
+            child: Text(
+              "￥$price",
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.red
+              ),
+            ),
+          ),
+
+          Text(
+            "市场价: $originPrice",
+            style: TextStyle(
+              color: Colors.grey[400],
+              fontSize: 14,
+              decoration: TextDecoration.lineThrough
+            ),
+          )
+        ],
+      ),
     );
   }
 }

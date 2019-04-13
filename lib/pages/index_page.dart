@@ -42,7 +42,7 @@ class _IndexPageState extends State<IndexPage> {
     HomePage(),
     CategoryPage(),
     CartPage(),
-    MemberPage()
+    ImagePickerWidget()
   ];
 
   // 当前页面索引
