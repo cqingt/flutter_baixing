@@ -8,6 +8,8 @@ import '../model/cartInfo.dart';
 class CartProvide with ChangeNotifier{
   String cartString = '[]';
   List<CartInfoModel> cartList = []; // 购物车列表 
+  double allPrice = 0 ;//总价格
+  int allGoodsCount = 0; //总数量
 
   save(goodsId, goodsName, count, price, images) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -35,7 +37,8 @@ class CartProvide with ChangeNotifier{
         'goodsName': goodsName,
         'count': count,
         'price': price,
-        'images': images
+        'images': images,
+        'isCheck': true
       };
 
       tempList.add(goods);
@@ -44,8 +47,6 @@ class CartProvide with ChangeNotifier{
 
     cartString = json.encode(tempList).toString(); // 存储string
     prefs.setString('cartInfo', cartString);
-    print('cartString>>>>>>>>>>>${cartString}');
-    print('cartList>>>>>>>>>>>>>${cartList}');
     notifyListeners();
   }
 
@@ -59,14 +60,43 @@ class CartProvide with ChangeNotifier{
     if (cartString == null) {
 
     } else {
+      allPrice = 0;
+      allGoodsCount = 0;
       List<Map> tempList = (json.decode(cartString.toString()) as List).cast(); // tostring 代码强壮，避免不是string出错
 
       tempList.forEach((temp){
+        if (temp['isCheck']  == true) {
+          allPrice += (temp['count'] * temp['price']);
+          allGoodsCount += temp['count'];
+        }
+
         cartList.add(CartInfoModel.fromJson(temp)); // 把数据映射到model，方便 操作
       });
     }
 
     notifyListeners();
+  }
+
+  deleteOneGoods(String goodsId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    cartString = prefs.getString('cartInfo');
+    List<Map> tempList = (json.decode(cartString.toString()) as List).cast();
+
+    int tempIndex = 0;
+    int delIndex = 0;
+    tempList.forEach((val){
+      if (goodsId == val['goodsId']) {
+        delIndex = tempIndex;
+      }
+      tempIndex++;
+    });
+
+    tempList.removeAt(delIndex);
+
+    cartString = json.encode(tempList).toString();
+    prefs.setString('cartInfo', cartString);
+
+    await getCartInfo(); //重新生成provide
   }
 
   // 清空购物车

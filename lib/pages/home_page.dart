@@ -223,10 +223,6 @@ class SwiperDiy extends StatelessWidget {
     // 适配手机屏幕
     //ScreenUtil.instance = ScreenUtil(width: 750, height: 1334)..init(context); //设置 设计稿的尺寸，此处ip6
 
-    print("设备像素密度：${ScreenUtil.pixelRatio}");
-    print("设备宽度：${ScreenUtil.screenWidth}");
-    print("设备高度：${ScreenUtil.screenHeight}");
-
     return Container(
       height: ScreenUtil().setHeight(333),
       width: ScreenUtil().setWidth(750),
